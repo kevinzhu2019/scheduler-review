@@ -9,7 +9,7 @@ export default function DayListItem(props) {
     (props.spots === 0 ? "--full" : "")
   );
 
-  const formatSpots = () => {
+  const formatSpots = () => {//massage the data from props.spots
     if(props.spots === 1) {
       return `1 spot remaining`;
     } else if (props.spots > 1) {

@@ -10,6 +10,7 @@ export default function Button(props) {
       "button--confirm": props.confirm,
       "button--danger": props.danger
    });
+   /*output would be "button button--confirm" or "button button--danger", it is equal to classnames("button", {"button--confirm": true, "button--danger": false}) or classnames("button", {"button--confirm": false, "button--danger": true})*/
 
    return <button 
             className={buttonClass}
