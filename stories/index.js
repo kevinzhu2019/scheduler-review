@@ -17,6 +17,14 @@ import InterviewerList from "components/InterviewerList";
 
 import Appointment from "components/Appointment/index";
 
+import Header from "components/Appointment/Header";
+
+import Empty from "components/Appointment/Empty";
+
+import Show from "components/Appointment/Show";
+
+import Confirm from "components/Appointment/Confirm";
+
 storiesOf("Button", module)
   .addParameters({
     backgrounds: [{ name: "dark", value: "#222f3e", default: true }]
@@ -139,5 +147,22 @@ storiesOf("Appointment", module)
   .add("Appointment with time", () => (
     <Appointment
     time={"12pm"}
+    />
+  ))
+  .add("Header", () => <Header time="12pm" />)
+  .add("Empty", () => <Empty onAddProp={action("onAdd")} />)
+  .add("Show", () => (
+    <Show 
+      student="Lydia Miller-Jones"
+      interviewer={interviewers[0]}
+      onEditProp={action("onEdit")}
+      onDeleteProp={action("Ondelete")}
+    />
+  ))
+  .add("Confirm", () => (
+    <Confirm 
+      message="Delete the appointment?"
+      onConfirmProp={action("onConfirm")}
+      onCancelProp={action("onCancel")}
     />
   ))
