@@ -13,7 +13,7 @@ export default function InterviewerList(props) {
             name={item.name}
             selected={props.value === item.id}
             setInterviewerProp={() => props.onChange(item.id)}//use value and onChange to monitor the item.id change
-    />
+           />
   })
   return (
     <section className="interviewers">
