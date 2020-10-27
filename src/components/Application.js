@@ -4,6 +4,61 @@ import "components/Application.scss";
 
 import DayList from "components/DayList";
 
+import "components/Appointment";
+
+import Appointment from "components/Appointment";
+
+const appointments = [
+  {
+    id: 1,
+    time: "12pm",
+  },
+  {
+    id: 2,
+    time: "1pm",
+    interview: {
+      student: "Lydia Miller-Jones",
+      interviewer: {
+        id: 1,
+        name: "Sylvia Palmer",
+        avatar: "https://i.imgur.com/LpaY82x.png",
+      }
+    }
+  },
+  {
+    id: 3,
+    time: "2pm",
+    interview: {
+      student: "Rachel Zhu",
+      interviewer: {
+        id: 2,
+        name: "Sylvia Palmer_2",
+        avatar: "https://i.imgur.com/LpaY82x.png",
+      }
+    }
+  },
+  {
+    id: 4,
+    time: "3pm",
+    interview: {
+      student: "Austin Wang",
+      interviewer: {
+        id: 3,
+        name: "Sylvia Palmer_3",
+        avatar: "https://i.imgur.com/LpaY82x.png",
+      }
+    }
+  },
+  {
+    id: 5,
+    time: "4pm",
+  },
+  {
+    id: 6,
+    time: "5pm"
+  }
+];
+
 const days = [
   {
     id: 1,
@@ -25,6 +80,17 @@ const days = [
 export default function Application() {
 
   const [day, setDay] = useState("Monday");
+
+  const appointmentList = appointments.map((item) => {
+    return (
+      <Appointment 
+        key={item.id}
+        id={item.id}
+        time={item.time}
+        interview={item.interview}
+      />
+    )
+  })
 
   return (
     <main className="layout">
@@ -49,7 +115,7 @@ export default function Application() {
         />
       </section>
       <section className="schedule">
-        {/* Replace this with the schedule elements durint the "The Scheduler" activity. */}
+        {appointmentList}
       </section>
     </main>
   );
