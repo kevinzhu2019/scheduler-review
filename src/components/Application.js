@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import "components/Application.scss";
 
@@ -7,6 +7,8 @@ import DayList from "components/DayList";
 import "components/Appointment";
 
 import Appointment from "components/Appointment";
+
+import axios from "axios";
 
 const appointments = [
   {
@@ -55,31 +57,22 @@ const appointments = [
   },
   {
     id: 6,
-    time: "5pm"
+    time: "5pm",
   }
-];
-
-const days = [
-  {
-    id: 1,
-    name: "Monday",
-    spots: 2,
-  },
-  {
-    id: 2,
-    name: "Tuesday",
-    spots: 5,
-  },
-  {
-    id: 3,
-    name: "Wednesday",
-    spots: 0,
-  },
 ];
 
 export default function Application() {
 
   const [day, setDay] = useState("Monday");
+  const [days, setDays] = useState([]);
+
+  useEffect(() => {
+    axios.get("http://localhost:8001/api/days")
+    .then((response) => {
+      // console.log(response.data);
+      setDays([...response.data]);
+    });
+  }, [])//empty array to make the side effect to run only once
 
   const appointmentList = appointments.map((item) => {
     return (
