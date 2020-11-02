@@ -63,13 +63,23 @@ const appointments = [
 
 export default function Application() {
 
+  const setDay = day => setState(prev => ({...prev, day}));
+  const setDays = days => setState(prev => ({...prev, days}));
+
+  const [state, setState] = useState({
+    day: "Monday",
+    days: []
+  });
+
+  /*
+  Above 6 lines are replacing the original as below:
   const [day, setDay] = useState("Monday");
   const [days, setDays] = useState([]);
+  */
 
   useEffect(() => {
     axios.get("http://localhost:8001/api/days")
     .then((response) => {
-      // console.log(response.data);
       setDays([...response.data]);
     });
   }, [])//empty array to make the side effect to run only once
@@ -96,8 +106,8 @@ export default function Application() {
         <hr className="sidebar__separator sidebar--centered" />
         <nav className="sidebar__menu">
           <DayList 
-            days={days}
-            day={day}
+            days={state.days}
+            day={state.day}
             setDay={setDay}
           />
         </nav>
