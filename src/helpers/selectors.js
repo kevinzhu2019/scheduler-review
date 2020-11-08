@@ -18,3 +18,15 @@ export function getInterview(state, interview) {
   let interviewer = state.interviewers[interview.interviewer.toString()];
   return {...interview, interviewer};
 }
+
+export function getInterviewersForDay(state, day) {
+  const filteredDay = state.days.filter(eachDay => eachDay.name === day);
+  if (filteredDay.length === 0) {
+    return [];
+  }
+  let filteredInterviewers = [];
+  for(const interviewerId of filteredDay[0].interviewers) {
+    filteredInterviewers.push(state.interviewers[interviewerId.toString()])
+  }
+  return filteredInterviewers;
+}
