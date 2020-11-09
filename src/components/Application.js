@@ -53,7 +53,6 @@ export default function Application() {
     };
     setState(prev => ({...prev, appointments}));
     await axios.put(`http://localhost:8001/api/appointments/${id}`, {interview})
-    setState(prev => ({...prev, appointments}))
   }
 
   dailyAppointments = getAppointmentsForDay(state, state.day);
