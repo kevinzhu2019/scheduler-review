@@ -10,6 +10,8 @@ import Empty from "components/Appointment/Empty";
 
 import Form from "components/Appointment/Form";
 
+import Status from "components/Appointment/Status";
+
 import useVisualMode from "hooks/useVisualMode";
 
 export default function Appointment(props) {
@@ -17,11 +19,21 @@ export default function Appointment(props) {
   const SHOW = "SHOW";
   const EMPTY = "EMPTY";
   const CREATE = "CREATE";
+  const SAVING = "SAVING";
   const { mode, transition, back } = useVisualMode(
     props.interview ? SHOW : EMPTY
   );
 
-  const interviewers = []; //this is temp-hard-coded and will be removed later
+  const save = (name, interviewer) => {
+    const interview = {
+      student: name,
+      interviewer
+    };
+    transition(SAVING);
+    props
+    .bookInterviewFromApplication(props.id, interview)
+    .then(() => transition(SHOW));
+  }
 
   return (
     <article className="appointment">
@@ -30,8 +42,8 @@ export default function Appointment(props) {
       {mode === CREATE && (
         <Form 
           interviewers={props.interviewers}
-          onSaveProp={() => console.log("save is clicked")}
-          onCancelProp={() => back()}
+          onSaveProp={save}
+          onCancelProp={back}
         />)}
       {mode === SHOW && (
         <Show
@@ -41,6 +53,7 @@ export default function Appointment(props) {
           onDeleteProp={() => console.log("delete clicked")}
         />
       )}
+      {mode === SAVING && <Status message="Saving..." />}
     </article>
   )
 }

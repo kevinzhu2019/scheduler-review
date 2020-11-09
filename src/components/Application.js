@@ -30,7 +30,6 @@ export default function Application() {
   */
 
  let dailyAppointments = [];
- let dailyInterviewers = []
 
   useEffect(() => {
     Promise.all([
@@ -42,19 +41,33 @@ export default function Application() {
     })
   }, [])//empty array to make the side effect to run only once
 
+  async function bookInterview(id, interview) {
+    console.log(id, interview);
+    const appointment = {
+      ...state.appointments[id],
+      interview: {...interview}
+    };
+    const appointments = {
+      ...state.appointments,
+      [id]: appointment
+    };
+    setState(prev => ({...prev, appointments}));
+    await axios.put(`http://localhost:8001/api/appointments/${id}`, {interview})
+    setState(prev => ({...prev, appointments}))
+  }
+
   dailyAppointments = getAppointmentsForDay(state, state.day);
 
   const appointmentList = dailyAppointments.map((item) => {
-
     const massagedInterview = getInterview(state, item.interview);
-
     return (
-      <Appointment 
+      <Appointment
         key={item.id}
         id={item.id}
         time={item.time}
         interview={massagedInterview}
         interviewers={getInterviewersForDay(state, state.day)}
+        bookInterviewFromApplication={bookInterview}
       />
     )
   })
