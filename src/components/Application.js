@@ -42,7 +42,6 @@ export default function Application() {
   }, [])//empty array to make the side effect to run only once
 
   async function bookInterview(id, interview) {
-    console.log(id, interview);
     const appointment = {
       ...state.appointments[id],
       interview: {...interview}
@@ -53,6 +52,19 @@ export default function Application() {
     };
     setState(prev => ({...prev, appointments}));
     await axios.put(`http://localhost:8001/api/appointments/${id}`, {interview})
+  }
+
+  async function cancelInterview(id) {
+    const deletedAppointment = {
+      ...state.appointments[id],
+      interview: null
+    };
+    const appointments = {
+      ...state.appointments,
+      [id]: deletedAppointment
+    };
+    setState(prev => ({...prev, appointments}));
+    await axios.delete(`http://localhost:8001/api/appointments/${id}`, deletedAppointment)
   }
 
   dailyAppointments = getAppointmentsForDay(state, state.day);
@@ -67,6 +79,7 @@ export default function Application() {
         interview={massagedInterview}
         interviewers={getInterviewersForDay(state, state.day)}
         bookInterviewFromApplication={bookInterview}
+        deleteInterviewFromApplication={() => cancelInterview(item.id)}
       />
     )
   })
