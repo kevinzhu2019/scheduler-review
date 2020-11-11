@@ -16,9 +16,12 @@ export default function useVisualMode(initial) {
   function back() {
     if(replace) {
       setMode(history[0]);
+      setHistory(prev => ([...prev.slice(0, 1)]));//once called back(), reset the whole history array
+      setReplace(false);
     } else {
       setMode(history.length - 2 >= 0 ? history[history.length - 2] : history[0]);
-      setHistory(prev => ([...prev.slice(0, prev.length - 1)]));
+      // setHistory(prev => ([...prev.slice(0, prev.length - 1)]));
+      setHistory(prev => ([...prev.slice(0, 1)]));
     }
   }
 

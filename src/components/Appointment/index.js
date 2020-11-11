@@ -14,6 +14,8 @@ import Status from "components/Appointment/Status";
 
 import Confirm from "components/Appointment/Confirm";
 
+import Error from "components/Appointment/Error";
+
 import useVisualMode from "hooks/useVisualMode";
 
 export default function Appointment(props) {
@@ -25,6 +27,8 @@ export default function Appointment(props) {
   const CONFIRM = "CONFIRM";
   const DELETE = "DELETE";
   const EDIT = "EDIT";
+  const ERROR_SAVE = "ERROR_SAVE";
+  const ERROR_DELETE = "ERROR_DELETE";
   const { mode, transition, back } = useVisualMode(
     props.interview ? SHOW : EMPTY
   );
@@ -34,15 +38,17 @@ export default function Appointment(props) {
       student: name,
       interviewer
     };
-    transition(SAVING);
+    transition(SAVING, true);
     props.bookInterviewFromApplication(props.id, interview)
-    .then(() => transition(SHOW));
+    .then(() => transition(SHOW))
+    .catch((error) => transition(ERROR_SAVE, true));
   }
 
   const confirmDelete = () => {
-    transition(DELETE);
+    transition(DELETE, true);
     props.deleteInterviewFromApplication()
-    .then(() => transition(EMPTY));
+    .then(() => transition(EMPTY))
+    .catch((error) => transition(ERROR_DELETE, true));
   }
 
   return (
@@ -66,6 +72,7 @@ export default function Appointment(props) {
         )}
       {mode === SHOW && (
         <Show
+          id={props.id}
           student={props.interview.student}
           interviewer={props.interview.interviewer}
           onEditProp={() => transition(EDIT)}
@@ -79,6 +86,16 @@ export default function Appointment(props) {
           onConfirmProp={() => confirmDelete()}
           onCancelProp={() => back()}
           message={"Are you sure you want to delete?"}
+        />)}
+      {mode === ERROR_SAVE && (
+        <Error 
+          message="Fail to save the appointment." 
+          onCloseProp={() => back()}
+        />)}
+      {mode === ERROR_DELETE && (
+        <Error 
+          message="Fail to delete the appointment."
+          onCloseProp={() => back()}
         />)}
     </article>
   )

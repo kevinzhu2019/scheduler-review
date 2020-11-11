@@ -59,11 +59,12 @@ export default function Application() {
       ...state.appointments[id],
       interview: null
     };
-    const appointments = {
-      ...state.appointments,
-      [id]: deletedAppointment
-    };
-    setState(prev => ({...prev, appointments}));
+    // const appointments = {
+    //   ...state.appointments,
+    //   [id]: deletedAppointment
+    // }
+    // setState(prev => ({...prev, appointments})); 
+    //No need to setState when deleting appointment, otherwise will cause error handling failed since when go back to (SHOW) mode, the appointment is already removed from props so that app crashes. (SHOW mode depends on state)
     await axios.delete(`http://localhost:8001/api/appointments/${id}`, deletedAppointment)
   }
 

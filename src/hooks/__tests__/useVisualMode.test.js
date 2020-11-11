@@ -5,6 +5,7 @@ import useVisualMode from "hooks/useVisualMode";
 const FIRST = "FIRST";
 const SECOND = "SECOND";
 const THIRD = "THIRD";
+const FORTH = "FORTH";
 
 test("useVisualMode should initialize with default value", () => {
   const { result } = renderHook(() => useVisualMode(FIRST));
@@ -45,8 +46,11 @@ test("useVisualMode should replace the current mode", () => {
   expect(result.current.mode).toBe(SECOND);
 
   // Passing "true" to transition(THIRD, true) says "Transition to THIRD by REPLACING SECOND"
-  act(() => result.current.transition(THIRD, true));
+  act(() => result.current.transition(THIRD));
   expect(result.current.mode).toBe(THIRD);
+
+  act(() => result.current.transition(FORTH, true));
+  expect(result.current.mode).toBe(FORTH);
 
   act(() => result.current.back());
   expect(result.current.mode).toBe(FIRST);
