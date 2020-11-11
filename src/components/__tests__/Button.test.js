@@ -33,7 +33,7 @@ it("renders a danger button", () => {
 it("renders a clickable button", () => {
   const handleClick = jest.fn();
   const { getByText } = render(
-    <Button onClick={handleClick}>Clickable</Button>
+    <Button buttonClicked={handleClick}>Clickable</Button>
   );
 
   const button = getByText("Clickable");
@@ -46,7 +46,7 @@ it("renders a clickable button", () => {
 it("renders a disabled button", () => {
   const handleClick = jest.fn();
   const { getByText } = render(
-    <Button disabled onClick={handleClick}>
+    <Button disabled buttonClicked={handleClick}>
       Disabled
     </Button>
   );
