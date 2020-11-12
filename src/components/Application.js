@@ -8,8 +8,6 @@ import "components/Appointment";
 
 import Appointment from "components/Appointment";
 
-// import axios from "axios";
-
 import useApplicationData from "hooks/useApplicationData";
 
 import { getAppointmentsForDay, getInterview, getInterviewersForDay } from "helpers/selectors";

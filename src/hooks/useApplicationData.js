@@ -22,7 +22,7 @@ export default function useApplicationData() {
     })
   }, [])//empty array to make the side effect to run only once
 
-  async function bookInterview(id, interview) {
+  const bookInterview = async(id, interview) => {
     const appointment = {
       ...state.appointments[id],
       interview: {...interview}
@@ -31,11 +31,13 @@ export default function useApplicationData() {
       ...state.appointments,
       [id]: appointment
     };
+    console.log("this is days: ", state.days);
     setState(prev => ({...prev, appointments}));
     await axios.put(`http://localhost:8001/api/appointments/${id}`, {interview})
+    spotCalc();
   }
 
-  async function cancelInterview(id) {
+  const cancelInterview = async(id) => {
     const deletedAppointment = {
       ...state.appointments[id],
       interview: null
@@ -47,6 +49,15 @@ export default function useApplicationData() {
     // setState(prev => ({...prev, appointments})); 
     //No need to setState when deleting appointment, otherwise will cause error handling failed since when go back to (SHOW) mode, the appointment is already removed from props so that app crashes. (SHOW mode depends on state)
     await axios.delete(`http://localhost:8001/api/appointments/${id}`, deletedAppointment)
+    spotCalc();
+  }
+
+  const spotCalc = () => {
+    axios.get("http://localhost:8001/api/days")
+    .then((res) => {
+      let updatedDays = res.data
+      setState(prev => ({...prev, days: updatedDays}));
+    });
   }
 
   return {
