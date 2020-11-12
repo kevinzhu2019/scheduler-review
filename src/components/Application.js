@@ -8,20 +8,29 @@ import "components/Appointment";
 
 import Appointment from "components/Appointment";
 
-import axios from "axios";
+// import axios from "axios";
+
+import { useApplicationData } from "hooks/useApplicationData";
 
 import { getAppointmentsForDay, getInterview, getInterviewersForDay } from "helpers/selectors";
 
 export default function Application() {
 
-  const setDay = day => setState(prev => ({...prev, day}));
+  const {
+    state,
+    setDay,
+    bookInterview,
+    cancelInterview
+  } = useApplicationData();
 
-  const [state, setState] = useState({//state is an object
-    day: "Monday",
-    days: [],
-    appointments: {},
-    interviewers: {}
-  });
+  // const setDay = day => setState(prev => ({...prev, day}));
+
+  // const [state, setState] = useState({//state is an object
+  //   day: "Monday",
+  //   days: [],
+  //   appointments: {},
+  //   interviewers: {}
+  // });
 
   /*
   Above 6 lines are replacing the original as below:
@@ -31,42 +40,42 @@ export default function Application() {
 
  let dailyAppointments = [];
 
-  useEffect(() => {
-    Promise.all([
-      axios.get("http://localhost:8001/api/days"),
-      axios.get("http://localhost:8001/api/appointments"),
-      axios.get("http://localhost:8001/api/interviewers"),
-    ]).then((all) => {
-      setState(prev => ({...prev, days: all[0].data, appointments: all[1].data, interviewers: all[2].data}));
-    })
-  }, [])//empty array to make the side effect to run only once
+  // useEffect(() => {
+  //   Promise.all([
+  //     axios.get("http://localhost:8001/api/days"),
+  //     axios.get("http://localhost:8001/api/appointments"),
+  //     axios.get("http://localhost:8001/api/interviewers"),
+  //   ]).then((all) => {
+  //     setState(prev => ({...prev, days: all[0].data, appointments: all[1].data, interviewers: all[2].data}));
+  //   })
+  // }, [])//empty array to make the side effect to run only once
 
-  async function bookInterview(id, interview) {
-    const appointment = {
-      ...state.appointments[id],
-      interview: {...interview}
-    };
-    const appointments = {
-      ...state.appointments,
-      [id]: appointment
-    };
-    setState(prev => ({...prev, appointments}));
-    await axios.put(`http://localhost:8001/api/appointments/${id}`, {interview})
-  }
+  // async function bookInterview(id, interview) {
+  //   const appointment = {
+  //     ...state.appointments[id],
+  //     interview: {...interview}
+  //   };
+  //   const appointments = {
+  //     ...state.appointments,
+  //     [id]: appointment
+  //   };
+  //   setState(prev => ({...prev, appointments}));
+  //   await axios.put(`http://localhost:8001/api/appointments/${id}`, {interview})
+  // }
 
-  async function cancelInterview(id) {
-    const deletedAppointment = {
-      ...state.appointments[id],
-      interview: null
-    };
-    // const appointments = {
-    //   ...state.appointments,
-    //   [id]: deletedAppointment
-    // }
-    // setState(prev => ({...prev, appointments})); 
-    //No need to setState when deleting appointment, otherwise will cause error handling failed since when go back to (SHOW) mode, the appointment is already removed from props so that app crashes. (SHOW mode depends on state)
-    await axios.delete(`http://localhost:8001/api/appointments/${id}`, deletedAppointment)
-  }
+  // async function cancelInterview(id) {
+  //   const deletedAppointment = {
+  //     ...state.appointments[id],
+  //     interview: null
+  //   };
+  //   // const appointments = {
+  //   //   ...state.appointments,
+  //   //   [id]: deletedAppointment
+  //   // }
+  //   // setState(prev => ({...prev, appointments})); 
+  //   //No need to setState when deleting appointment, otherwise will cause error handling failed since when go back to (SHOW) mode, the appointment is already removed from props so that app crashes. (SHOW mode depends on state)
+  //   await axios.delete(`http://localhost:8001/api/appointments/${id}`, deletedAppointment)
+  // }
 
   dailyAppointments = getAppointmentsForDay(state, state.day);
 
@@ -108,7 +117,13 @@ export default function Application() {
         />
       </section>
       <section className="schedule">
-        {appointmentList}
+        <section className="schedule">
+          {appointmentList}
+          <Appointment
+            key="last" 
+            time="5pm"
+          />
+        </section>
       </section>
     </main>
   );
