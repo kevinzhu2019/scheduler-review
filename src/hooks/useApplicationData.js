@@ -32,7 +32,7 @@ export default function useApplicationData() {
       [id]: appointment
     };
     console.log("this is days: ", state.days);
-    setState(prev => ({...prev, appointments}));
+    setState(prev => ({...prev, appointments: appointments}));
     await axios.put(`http://localhost:8001/api/appointments/${id}`, {interview})
     spotCalc();
   }
@@ -55,7 +55,7 @@ export default function useApplicationData() {
   const spotCalc = () => {
     axios.get("http://localhost:8001/api/days")
     .then((res) => {
-      let updatedDays = res.data
+      let updatedDays = res.data;
       setState(prev => ({...prev, days: updatedDays}));
     });
   }
