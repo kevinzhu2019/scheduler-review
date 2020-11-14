@@ -37,7 +37,7 @@ export default function Appointment(props) {
   const save = (name, interviewer) => {
     console.log(name, interviewer);
     if(!interviewer) {
-      transition(ERROR_EMPTY);
+      transition(ERROR_EMPTY, true);
     } else {
       const interview = {
         student: name,
