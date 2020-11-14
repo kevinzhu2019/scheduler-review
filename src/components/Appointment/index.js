@@ -29,19 +29,25 @@ export default function Appointment(props) {
   const EDIT = "EDIT";
   const ERROR_SAVE = "ERROR_SAVE";
   const ERROR_DELETE = "ERROR_DELETE";
+  const ERROR_EMPTY = "ERROR_EMPTY";
   const { mode, transition, back } = useVisualMode(
     props.interview ? SHOW : EMPTY
   );
 
   const save = (name, interviewer) => {
-    const interview = {
-      student: name,
-      interviewer
-    };
-    transition(SAVING, true);
-    props.bookInterviewFromApplication(props.id, interview)
-    .then(() => transition(SHOW))
-    .catch((error) => transition(ERROR_SAVE, true));
+    console.log(name, interviewer);
+    if(!interviewer) {
+      transition(ERROR_EMPTY);
+    } else {
+      const interview = {
+        student: name,
+        interviewer: interviewer
+      };
+      transition(SAVING, true)
+      props.bookInterviewFromApplication(props.id, interview)
+      .then(() => transition(SHOW))
+      .catch((error) => transition(ERROR_SAVE, true));
+    }
   }
 
   const confirmDelete = () => {
@@ -89,12 +95,17 @@ export default function Appointment(props) {
         />)}
       {mode === ERROR_SAVE && (
         <Error 
-          message="Fail to save the appointment." 
+          message={"Fail to save the appointment."} 
           onCloseProp={() => back()}
         />)}
       {mode === ERROR_DELETE && (
         <Error 
-          message="Fail to delete the appointment."
+          message={"Fail to delete the appointment."}
+          onCloseProp={() => back()}
+        />)}
+      {mode === ERROR_EMPTY && (
+        <Error 
+          message={"Please enter the student name and choose an interviewer."}
           onCloseProp={() => back()}
         />)}
     </article>

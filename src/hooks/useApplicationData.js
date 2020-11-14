@@ -31,7 +31,6 @@ export default function useApplicationData() {
       ...state.appointments,
       [id]: appointment
     };
-    console.log("this is days: ", state.days);
     setState(prev => ({...prev, appointments: appointments}));
     await axios.put(`http://localhost:8001/api/appointments/${id}`, {interview})
     spotCalc();
