@@ -1,11 +1,38 @@
-import { useState, useEffect } from "react";
+import { useReducer, useEffect } from "react";
 import axios from "axios";
+
+const SET_DAY = "SET_DAY";
+const SET_APPLICATION_DATA = "SET_APPLICATION_DATA";
+const SET_INTERVIEW = "SET_INTERVIEW";
+const SPOT_CALC = "SPOT_CALC";
+
+function reducer(state, action) {
+  switch(action.type) {
+    case SET_DAY:
+      return {...state, day: action.day}
+    case SET_APPLICATION_DATA:
+      return {
+        ...state, 
+        days: action.daysFromDB, 
+        appointments: action.appointmentsFromDB, 
+        interviewers: action.interviewersFromDB
+      }
+    case SET_INTERVIEW:
+      return {...state, appointments: action.appointments}
+    case SPOT_CALC:
+      return {...state, days: action.updatedDays}
+    default:
+      throw new Error(
+        `Tried to reduce unsupported action type: ${action.type}`
+      );
+  }
+}
 
 export default function useApplicationData() {
 
-  const setDay = day => setState(prev => ({...prev, day}));
+  const setDay = day => dispatch({type: SET_DAY, day});
 
-  const [state, setState] = useState({//state is an object
+  const [state, dispatch] = useReducer(reducer, {
     day: "Monday",
     days: [],
     appointments: {},
@@ -18,7 +45,7 @@ export default function useApplicationData() {
       axios.get("http://localhost:8001/api/appointments"),
       axios.get("http://localhost:8001/api/interviewers"),
     ]).then((all) => {
-      setState(prev => ({...prev, days: all[0].data, appointments: all[1].data, interviewers: all[2].data}));
+      dispatch({type: SET_APPLICATION_DATA, daysFromDB: all[0].data, appointmentsFromDB: all[1].data, interviewersFromDB: all[2].data});
     })
   }, [])//empty array to make the side effect to run only once
 
@@ -31,7 +58,7 @@ export default function useApplicationData() {
       ...state.appointments,
       [id]: appointment
     };
-    setState(prev => ({...prev, appointments: appointments}));
+    dispatch({type: SET_INTERVIEW, appointments});
     await axios.put(`http://localhost:8001/api/appointments/${id}`, {interview})
     spotCalc();
   }
@@ -55,7 +82,7 @@ export default function useApplicationData() {
     axios.get("http://localhost:8001/api/days")
     .then((res) => {
       let updatedDays = res.data;
-      setState(prev => ({...prev, days: updatedDays}));
+      dispatch({type: SPOT_CALC, updatedDays});
     });
   }
 
